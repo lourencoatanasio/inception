@@ -1,0 +1,67 @@
+version: "3.8"
+
+volumes:
+        wordpress-volume:
+                driver: local
+                driver_opts:
+                        device: /home/ldiogo/data/wordpress
+                        o: bind
+                        type: none
+        mariadb:
+                driver: local
+                driver_opts:
+                        device: /home/ldiogo/data/mysql
+                        o: bind
+                        type: none
+
+networks:
+  inception:
+    name: inception
+    driver: bridge
+
+services:
+  nginx:
+    image: nginx-server  # Replace with your image name
+    container_name: nginx
+    build: ./requirements/nginx/.
+    ports:
+      - "443:443"  # Map port 443 of the container to port 443 on the host
+    networks:
+      - inception
+    depends_on:
+      - wordpress
+    volumes:
+      - wordpress-volume:/var/www/html
+    env_file:
+      - .env
+    restart: on-failure
+
+  wordpress:
+    container_name: wordpress
+    build: ./requirements/wordpress/.
+    image: wordpress-site
+    volumes:
+      - wordpress-volume:/var/www/html
+    env_file:
+      - .env
+    networks:
+      - inception
+    depends_on:
+      - mariadb
+    restart: on-failure
+    expose:
+      - "9000"
+
+  mariadb:
+    container_name: mariadb
+    build: ./requirements/mariadb/.
+    image: mariadb-data
+    volumes:
+      - mariadb:/var/lib/mysql
+    env_file:
+      - .env
+    networks:
+      - inception
+    restart: on-failure
+    expose:
+      - "3306"
