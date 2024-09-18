@@ -1,5 +1,8 @@
 FROM debian:11
 
+RUN --mount=type=secret,id=db_password
+RUN --mount=type=secret,id=db_root_password
+
 # Install necessary packages and set up the MariaDB directory
 RUN apt-get update && \
     apt-get -y install \

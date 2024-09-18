@@ -1,18 +1,18 @@
 version: "3.8"
 
 volumes:
-        wordpress-volume:
-                driver: local
-                driver_opts:
-                        device: /home/ldiogo/data/wordpress
-                        o: bind
-                        type: none
-        mariadb:
-                driver: local
-                driver_opts:
-                        device: /home/ldiogo/data/mysql
-                        o: bind
-                        type: none
+  wordpress-volume:
+    driver: local
+    driver_opts:
+      device: /home/ldiogo/data/wordpress
+      o: bind
+      type: none
+  mariadb:
+    driver: local
+    driver_opts:
+      device: /home/ldiogo/data/mysql
+      o: bind
+      type: none
 
 networks:
   inception:
@@ -38,7 +38,8 @@ services:
 
   wordpress:
     container_name: wordpress
-    build: ./requirements/wordpress/.
+    build: 
+      context: ./requirements/wordpress/.
     image: wordpress-site
     volumes:
       - wordpress-volume:/var/www/html
@@ -51,10 +52,15 @@ services:
     restart: on-failure
     expose:
       - "9000"
+    secrets:
+      - credentials
+      - db_password
+      - db_root_password
 
   mariadb:
     container_name: mariadb
-    build: ./requirements/mariadb/.
+    build: 
+      context: ./requirements/mariadb/.
     image: mariadb-data
     volumes:
       - mariadb:/var/lib/mysql
@@ -65,3 +71,15 @@ services:
     restart: on-failure
     expose:
       - "3306"
+    secrets:
+      - db_password
+      - db_root_password
+
+secrets:
+  credentials:
+    file: ../secrets/credentials.txt
+  db_password:
+    file: ../secrets/db_password.txt
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+

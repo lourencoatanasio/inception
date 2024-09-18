@@ -1,5 +1,9 @@
 FROM debian:11
 
+RUN --mount=type=secret,id=credentials
+RUN --mount=type=secret,id=db_password
+RUN --mount=type=secret,id=db_root_password
+
 # Add the Sury repository for PHP 7.4
 RUN apt-get update && apt-get install -y lsb-release apt-transport-https ca-certificates wget && \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
