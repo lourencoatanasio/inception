@@ -3,6 +3,7 @@
 set -e  # Exit on any error
 cd /var/www/html
 
+
 # Read the raw passwords from the credentials file
 if [ -e "/run/secrets/credentials" ]; then
     # Read the first line as the admin password
@@ -60,6 +61,7 @@ else
 fi
 
 echo "[Wordpress startup] Starting WordPress FastCGI on port 9000."
+
 exec /usr/sbin/php-fpm7.4 -F -R
 
 

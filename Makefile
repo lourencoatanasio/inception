@@ -2,11 +2,13 @@
 up:
 	mkdir -p /home/ldiogo/data/mysql
 	mkdir -p /home/ldiogo/data/wordpress
+	export DOCKER_BUILDKIT=1
 	docker-compose -f ./srcs/docker-compose.yml up --build
 
 re :
 	mkdir -p /home/ldiogo/data/mysql
 	mkdir -p /home/ldiogo/data/wordpress
+	export DOCKER_BUILDKIT=1
 	docker-compose -f ./srcs/docker-compose.yml down --volumes --remove-orphans
 	docker-compose -f ./srcs/docker-compose.yml up --build
 fclean:
